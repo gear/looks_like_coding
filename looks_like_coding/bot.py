@@ -3,9 +3,8 @@ import utils
 import getpass
 import random
 
-dwight_quotes = [
-
-]
+with open('data/dwight_quotes.txt', 'r') as f:
+    dwight_quotes = f.readlines()
 
 class GreetBot(fbchat.Client):
     """Saying hi. Copied from EchoBot."""
@@ -20,8 +19,8 @@ class GreetBot(fbchat.Client):
         """Call upon a message is received."""
         self.markAsDelivered(author_id, mid)
         self.markAsRead(author_id)
-        print("{} said: {}".format(author_id, message))
-        if (author_id == self.id):
+        print("{} said: {}".format(author_name, message))
+        if (author_name == self.uid):
             pass
         else:
             self.send(author_id, "Hi, this is {}'s bot, not Hoang.\
@@ -32,7 +31,19 @@ class GreetBot(fbchat.Client):
 
 class Dwight(GreetBot):
     """Hoang's robot butler, Dwight.""" 
-    pass
+    def __init__(self, email, password, name="Dwight", master="Hoang"):
+        super(Dwight, self).__init__(email, password, master)
+        self.quotes = dwight_quotes
+    
+    def on_message(self, mid, author_id, author_name, message, metadata):
+        self.markAsDelivered(author_id, mid)
+        self.markAsRead(author_id)
+        print("{} said: {}".format(author_id, message))
+        if (self.uid == author_name):
+            pass
+        else:
+            i = random.randint(0,len(self.quotes))
+            self.send(author_id, self.quotes[i])
 
 
 def test():
@@ -42,6 +53,13 @@ def test():
     bot = GreetBot(email, password)
     bot.listen()
 
+def test_dwight():
+    """Test Dwight bot.""" 
+    email = input("Enter your email:" )
+    password = getpass.getpass("Type in your password: ")
+    bot = Dwight(email, password)
+    bot.listen()
+
 
 if __name__ == "__main__":
-    test()
+    test_dwight()
