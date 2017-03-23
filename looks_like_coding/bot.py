@@ -20,7 +20,7 @@ class GreetBot(fbchat.Client):
         self.markAsDelivered(author_id, mid)
         self.markAsRead(author_id)
         print("{} said: {}".format(author_name, message))
-        if (author_name == self.uid):
+        if (str(author_id) == str(self.uid)):
             pass
         else:
             self.send(author_id, "Hi, this is {}'s bot, not Hoang.\
@@ -39,7 +39,7 @@ class Dwight(GreetBot):
         self.markAsDelivered(author_id, mid)
         self.markAsRead(author_id)
         print("{} said: {}".format(author_id, message))
-        if (self.uid == author_name):
+        if (str(author_id) == str(self.uid)) and message != "test":
             pass
         else:
             i = random.randint(0,len(self.quotes))
